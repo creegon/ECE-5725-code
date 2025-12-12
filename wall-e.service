@@ -1,0 +1,27 @@
+[Unit]
+Description=WALL-E Emotion Robot
+After=multi-user.target graphical.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/wall-e-project
+
+# SDL 环境变量
+Environment="SDL_VIDEODRIVER=fbcon"
+Environment="SDL_FBDEV=/dev/fb0"
+Environment="SDL_MOUSEDRV=TSLIB"
+Environment="SDL_MOUSEDEV=/dev/input/event6"
+Environment="FRAMEBUFFER=/dev/fb0"
+
+# 使用 openvt 在虚拟终端运行,获得 TTY 访问
+ExecStart=/bin/openvt -c 1 -s -w -- sudo -u pi /usr/bin/python3 /home/pi/wall-e-project/main.py
+
+Restart=on-failure
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
